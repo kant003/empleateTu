@@ -1,7 +1,5 @@
 import { Router } from "express";
-import {AuthController} from '../controllers/auth.controller'
-import { loginValidation, registerValidation } from "../middlewares/validators.middleware";
-import { ValidationMiddleware } from "../middlewares/validation.middleware";
+import { OffertController } from "@/controllers/offer.controller";
 const router = Router()
 
 //API REST FULL
@@ -19,9 +17,9 @@ router.delete('/:id', OffertController.delete)
 router.put('/:id', OffertController.update)   
 
 // Calificamos una oferta x   {body}
-router.post('/:id/rate/',OffertController.rate)  
+//router.post('/:id/rate/',OffertController.rate)  
 // Vemos que calificación (total) se le ha data a una oferta X
-router.get('/:id/rate/', OffertController.getRate)
+//router.get('/:id/rate/', OffertController.getRate)
 
 
 
