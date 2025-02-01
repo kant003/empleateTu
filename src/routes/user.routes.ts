@@ -10,5 +10,7 @@ router.get('/profile', isAuthenticate , UserController.profile)
 //router.get('/', isAuthenticate , UserController.profile)
 //GET localhot:3000/api/users/
 router.get('/', isAuthenticate, isAdmin , UserController.getAll)
+//patch {body} 
+//router.patch('/', isAuthenticate, UserController.getAll)
 
 export default router

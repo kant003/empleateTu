@@ -11,7 +11,7 @@ export class OffertController{
         try{
             const id = req.params.id
             if(typeof id!="number") throw new HttpException(400,"Param error")
-            const offer = OfferService.getById(id)
+            const offer =  await OfferService.getById(id)
             res.status(200).json(offer)
         }catch(error){
             next(error)
@@ -20,7 +20,7 @@ export class OffertController{
 
     static async getAll(req:Request,res:Response, next:NextFunction){
         try{
-            const offers = OfferService.getAll()
+            const offers =  await OfferService.getAll()
             res.status(200).json(offers)
         }catch(error){
             next(error)
@@ -29,10 +29,11 @@ export class OffertController{
 
     static async create(req:Request,res:Response, next:NextFunction){
         try{
-            
             const offer = req.body.offer
-            const saveResult = OfferService.create(offer)
-            res.status(200).json(saveResult)
+            const userCreatorID = req.body.user?.id
+            console.log(req.body);
+            const saveResult = await OfferService.create(offer,userCreatorID)
+            res.status(200).json({message:"Creation succesfull",result:saveResult})
         }catch(error){
 
             next(error)
@@ -42,10 +43,10 @@ export class OffertController{
 
     static async update(req:Request,res:Response, next:NextFunction){
         try{
-            const offer = req.body.offer
+            const offer = req.body
             const id = req.params.id
             if(typeof id!="number") throw new HttpException(400,"Param error")
-            const updateResult = OfferService.update(id,offer)
+            const updateResult = await OfferService.update(id,offer)
             res.status(200).json(updateResult)
 
         }catch(error){
@@ -59,7 +60,7 @@ export class OffertController{
         try{
             const id = req.params.id
             if(typeof id!="number") throw new HttpException(400,"Param error")
-            const deleteResult = OfferService.delete(id)
+            const deleteResult = await OfferService.delete(id)
             res.status(200).json(deleteResult)
 
         }catch(error){

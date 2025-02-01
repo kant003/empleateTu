@@ -3,6 +3,7 @@ import {Response, Request, NextFunction} from "express"
 import { PrismaClient } from "prisma/prisma-client"
 import { CategoryService } from '../services/category.service'
 import { HttpException } from "../exceptions/httpException"
+import { log } from "console"
 const prisma = new PrismaClient()
 
 export class CategoryController{
@@ -11,7 +12,7 @@ export class CategoryController{
         try{
             const id = req.params.id
             if(typeof id!="number") throw new HttpException(400,"Param error")
-            const offer = CategoryService.getById(id)
+            const offer =  await CategoryService.getById(id)
             res.status(200).json(offer)
         }catch(error){
             next(error)
@@ -20,7 +21,7 @@ export class CategoryController{
 
     static async getAll(req:Request,res:Response, next:NextFunction){
         try{
-            const categories = CategoryService.getAll()
+            const categories = await CategoryService.getAll()
             res.status(200).json(categories)
         }catch(error){
             next(error)
@@ -29,9 +30,10 @@ export class CategoryController{
 
     static async create(req:Request,res:Response, next:NextFunction){
         try{
-            
+            console.log(req.body.name);
+    
             const category = req.body.category
-            const saveResult = CategoryService.create(category)
+            const saveResult = await CategoryService.create(category)
             res.status(200).json(saveResult)
         }catch(error){
 
@@ -42,10 +44,10 @@ export class CategoryController{
 
     static async update(req:Request,res:Response, next:NextFunction){
         try{
-            const category = req.body.category
+            const category = req.body
             const id = req.params.id
             if(typeof id!="number") throw new HttpException(400,"Param error")
-            const updateResult = CategoryService.update(id,category)
+            const updateResult = await CategoryService.update(id,category)
             res.status(200).json(updateResult)
 
         }catch(error){
@@ -59,7 +61,7 @@ export class CategoryController{
         try{
             const id = req.params.id
             if(typeof id!="number") throw new HttpException(400,"Param error")
-            const deleteResult = CategoryService.delete(id)
+            const deleteResult = await CategoryService.delete(id)
             res.status(200).json(deleteResult)
 
         }catch(error){
