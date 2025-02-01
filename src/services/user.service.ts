@@ -22,4 +22,17 @@ export class UserService {
         })
         return users
     }
+ /*
+    static async patch(user: User){
+        return await prisma.offer.update({
+            data:{
+                aceptNotifications:
+            },
+            where:{
+                id:user.id
+            }
+        })
+    }
+*/
+    
 }

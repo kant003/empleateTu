@@ -20,4 +20,16 @@ export class UserController{
             next(error)
         }
     }
+
+    /*
+    static async patch(req:Request, res:Response, next: NextFunction){
+        try{
+            const {id} = req.body.user
+            const user = await UserService.patch()
+            res.status(200).json(user)
+        }catch(error){
+            next(error)
+        }
+    }
+        */
 }

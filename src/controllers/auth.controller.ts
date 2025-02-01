@@ -8,7 +8,7 @@ export class AuthController{
             //TODO validar el body
             const newUser = await AuthService.register(userData)
             res.status(201).json({message:'User register successfully', newUser})
-        }catch(error){
+        }catch(error){  
             next(error)
         }
 
