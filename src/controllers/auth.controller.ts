@@ -1,5 +1,8 @@
 import { AuthService } from "../services/auth.service";
 import { Response, Request, NextFunction } from 'express'
+import jwt from "jsonwebtoken";
+
+const TOKEN_PASSWORD = process.env.TOKEN_PASSWORD || 'pass'
 
 export class AuthController {
     static async register(req: Request, res: Response, next: NextFunction) {
@@ -17,8 +20,10 @@ export class AuthController {
     static async login(req: Request, res: Response, next: NextFunction) {
         try {
             const userData = req.body
-            const token = await AuthService.login(userData.email, userData.password)
+            console.log('looo',userData.email, userData.password)
+            const { token, user } = await AuthService.login(userData.email, userData.password)
             //TODO inyectar cookie al cliente
+            console.log(token, user)
             res.cookie('token', token, {
                 maxAge: 60 * 60 * 1000 * 3, // 3 horas de caducidad
                 httpOnly: true, // no se puede accerder mediante js
@@ -26,7 +31,7 @@ export class AuthController {
                 sameSite: 'strict', // Evita ataques CSRF
 
             })
-            res.status(201).json({ message: 'Login successfully:', token })
+            res.status(201).json({ message: 'Login successfully:', user })
         } catch (error) {
             next(error)
         }
@@ -40,4 +45,15 @@ export class AuthController {
             next(error)
         }
     }
+
+    static async getAuthenticatedUser (req: Request, res: Response, next: NextFunction){
+        try {
+            const token = req.cookies.token;
+            if (!token) return res.status(401).json({ message: "No autenticado" });
+            const decoded = jwt.verify(token, TOKEN_PASSWORD);
+            return res.json(decoded);
+        } catch (error) {
+            next(error)
+        }
+    };
 }
