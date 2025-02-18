@@ -51,7 +51,8 @@ export class AuthController {
             const token = req.cookies.token;
             if (!token) return res.status(401).json({ message: "No autenticado" });
             const decoded = jwt.verify(token, TOKEN_PASSWORD);
-            return res.json(decoded);
+            res.status(200).json(decoded)
+
         } catch (error) {
             next(error)
         }
