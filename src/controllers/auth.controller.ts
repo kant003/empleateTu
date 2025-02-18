@@ -24,11 +24,19 @@ export class AuthController {
             const { token, user } = await AuthService.login(userData.email, userData.password)
             //TODO inyectar cookie al cliente
             console.log(token, user)
+
+            const validSameSiteValues = ["none", "lax", "strict"] as const; // Valores permitidos
+
+            const sameSiteValue: "none" | "lax" | "strict" = validSameSiteValues.includes(process.env.COOKIE_SAME_SITE as "none" | "lax" | "strict")
+            ? (process.env.COOKIE_SAME_SITE as "none" | "lax" | "strict")
+            : "none"; // Si no es válido, usa "none" por defecto
+
+
             res.cookie('token', token, {
                 maxAge: 60 * 60 * 1000 * 3, // 3 horas de caducidad
                 httpOnly: true, // no se puede accerder mediante js
                 secure: process.env.COOKIE_SECURE ? process.env.COOKIE_SECURE === "true" : true,// solo se envia si usas https
-                sameSite: process.env.COOKIE_SAME_SITE || 'none', // Evita ataques CSRF
+                sameSite: sameSiteValue, // Evita ataques CSRF
 
             })
             res.status(201).json({ message: 'Login successfully:', user })
